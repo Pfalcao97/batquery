@@ -42,7 +42,7 @@ fn main() -> battery::Result<()> {
     OpenOptions::new()
         .write(true)
         .append(true)
-        .open("results.csv")
+        .open("C:\\Users\\Pedro Falcao\\Documents\\Rust\\battery-script\\results.csv")
         .expect("Failed to open file")
         .write_all(result.as_bytes())
         .expect("Failed to append to file");
