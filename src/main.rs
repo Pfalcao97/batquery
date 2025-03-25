@@ -5,6 +5,7 @@ use chrono::Local;
 use std::fs::OpenOptions;
 use std::io;
 use std::io::Write;
+use std::env;
 
 fn main() -> battery::Result<()> {
 
@@ -21,13 +22,21 @@ fn main() -> battery::Result<()> {
         }
     };
 
+    let args: Vec<String> = env::args().collect();
+    let benchmark_running:bool = match args[1].to_lowercase().as_str() {
+        "true" => true,
+        "false" => false,
+        _ => panic!("Can't convert argument to bool."),
+    };
+
     let result = format!(
-        "{},{},{},{},{}\n", 
+        "{},{},{},{},{},{}\n", 
         battery.energy().value, 
         battery.energy_full().value, 
         battery.energy_full_design().value,
         battery.energy_rate().value,
-        Local::now().format("%Y-%m-%d %H:%M:%S")
+        Local::now().format("%Y-%m-%d %H:%M:%S"),
+        benchmark_running
     );
 
     OpenOptions::new()
@@ -41,5 +50,3 @@ fn main() -> battery::Result<()> {
     Ok(())
 
 }
-
-// get-process | Select-String -Pattern geekbench_avx2
