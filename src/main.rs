@@ -2,7 +2,7 @@ use battery_script;
 use chrono::Local;
 
 fn main() {
-    let result:String;
+    let mut result:String;
 
     let args = battery_script::parse_arguments();
 
@@ -11,8 +11,7 @@ fn main() {
 
     if !args.no_system {
             let system = battery_script::SystemInfo::build(Some(30)).unwrap();
-            result = format!(
-                "{},{},{},{},{},{},{},{},{}\n", 
+            result = battery_script::elements_to_csv_line!(
                 battery.current_energy,
                 battery.energy_full,
                 battery.energy_full_design,
@@ -24,8 +23,7 @@ fn main() {
                 args.benchmark_running
             );
     } else {
-        result = format!(
-            "{},{},{},{},{},{}\n", 
+        result = battery_script::elements_to_csv_line!(
             battery.current_energy,
             battery.energy_full,
             battery.energy_full_design,
@@ -34,6 +32,8 @@ fn main() {
             args.benchmark_running
         )
     };
+
+    result.push_str("\n");
 
     battery_script::append_to_csv(
         args.filename.as_str(),

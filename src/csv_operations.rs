@@ -12,3 +12,21 @@ pub fn append_to_csv(path:&str, line:String) {
         .expect("Failed to append to file");                
 
 }
+
+#[macro_export]
+macro_rules! elements_to_csv_line {
+    
+    ($first:expr) => {
+        format!("{}", $first)
+    };
+    
+    ($first:expr, $($rest:expr),+) => {
+        format!("{}{}", $first, {
+            let mut result = String::new();
+            $(
+                result.push_str(&format!(",{}", $rest));
+            )*
+            result
+        })
+    };
+}
