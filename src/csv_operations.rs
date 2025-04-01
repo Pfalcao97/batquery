@@ -4,8 +4,8 @@ use std::io::Write;
 pub fn append_to_csv(path:&str, line:String) {
 
     OpenOptions::new()
-        .write(true)
         .append(true)
+        .create(true)
         .open(path)
         .expect("Failed to open file")
         .write_all(line.as_bytes())
