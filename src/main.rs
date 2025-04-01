@@ -5,8 +5,6 @@ use std::env;
 
 fn main() {
 
-    let battery = battery_script::BatteryInfo::build().unwrap();
-
     let args: Vec<String> = env::args().collect();
     let benchmark_running:bool = match args[1].to_lowercase().as_str() {
         "true" => true,
@@ -14,18 +12,25 @@ fn main() {
         _ => panic!("Can't convert argument to bool."),
     };
 
+    let battery = battery_script::BatteryInfo::build().unwrap();
+    let system = battery_script::SystemInfo::build(Some(30)).unwrap();
+    let query_moment = Local::now();
+
     let result = format!(
-        "{},{},{},{},{},{}\n", 
+        "{},{},{},{},{},{},{},{},{}\n", 
         battery.current_energy,
         battery.energy_full,
         battery.energy_full_design,
         battery.energy_rate,
-        Local::now().format("%Y-%m-%d %H:%M:%S"),
+        system.uptime,
+        system.cpu_usage,
+        system.memory_usage,
+        query_moment.format("%Y-%m-%d %H:%M:%S"),
         benchmark_running
     );
-    
+
     battery_script::append_to_csv(
-        "C:\\Users\\Pedro Falcao\\Documents\\Rust\\battery-script\\results.csv",
+        "./results/battery_script.csv", 
         result
     );
 }
