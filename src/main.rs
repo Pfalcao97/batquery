@@ -29,7 +29,7 @@ fn main() {
                 print!("Querying system info.\n");
             };
 
-            let system = battery_script::SystemInfo::build(Some(30)).unwrap();
+            let system = battery_script::SystemInfo::build(Some(args.system_runs)).unwrap();
 
             if args.verbose {
                 println!("{:?}\n", system);

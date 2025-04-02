@@ -21,7 +21,10 @@ struct Cli {
     no_system: Option<bool>,
 
     #[arg(short,long, action = clap::ArgAction::SetTrue)]
-    verbose: Option<bool>
+    verbose: Option<bool>,
+
+    #[arg(long)]
+    system_runs: Option<u8>,
 }
 
 #[derive(Debug)]
@@ -31,6 +34,7 @@ pub struct BSArguments {
     pub benchmark_running: bool,
     pub no_system: bool,
     pub verbose:bool,
+    pub system_runs:u8,
 }
 
 pub fn parse_arguments() -> BSArguments {
@@ -69,6 +73,7 @@ pub fn parse_arguments() -> BSArguments {
 
     let no_system = parser.no_system.unwrap_or(false);
     let verbose = parser.verbose.unwrap_or(false);
+    let system_runs = parser.system_runs.unwrap_or(30);
 
     BSArguments {
         query_type: query_type,
@@ -76,5 +81,6 @@ pub fn parse_arguments() -> BSArguments {
         benchmark_running: benchmark_running,
         no_system: no_system,
         verbose: verbose,
+        system_runs: system_runs,
     }
 }
