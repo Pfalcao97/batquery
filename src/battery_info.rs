@@ -1,5 +1,6 @@
 extern crate starship_battery as battery;
 
+#[derive(Debug)]
 pub struct BatteryInfo {
     pub current_energy: f32,
     pub energy_rate: f32,

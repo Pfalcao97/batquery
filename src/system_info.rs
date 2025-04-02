@@ -4,6 +4,7 @@ fn avg(float_vec: Vec<f32>) -> f32 {
     float_vec.iter().sum::<f32>() as f32/ float_vec.len() as f32
 }
 
+#[derive(Debug)]
 pub struct SystemInfo {
     pub uptime: u64,
     pub cpu_usage: f32,
