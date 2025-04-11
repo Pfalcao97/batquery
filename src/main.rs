@@ -6,7 +6,7 @@ fn main() {
     let args = battery_script::parse_arguments();
 
     if args.verbose {
-        print!("{:?}\n", args);
+        println!("{:?}", args);
     };
 
     let query_moment = Local::now();
