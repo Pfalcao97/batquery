@@ -1,4 +1,3 @@
-use battery_script;
 use chrono::Local;
 
 fn main() {
