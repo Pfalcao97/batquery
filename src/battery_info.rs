@@ -11,22 +11,20 @@ pub struct BatteryInfo {
 
 impl BatteryInfo {
     pub fn build() -> Result<BatteryInfo, &'static str> {
+        let battery = battery::Manager::new() // Since this script is only valid
+            .unwrap() // when at least one battey is found
+            .batteries() // and able to be queryed, i'm
+            .unwrap() // overusing `unwrap`. It's not
+            .next() // always the best way to handle errors,
+            .unwrap() // but for this case, it works well.
+            .unwrap();
 
-        let battery = battery::Manager::new()        // Since this script is only valid
-                                        .unwrap()    // when at least one battey is found
-                                        .batteries() // and able to be queryed, i'm 
-                                        .unwrap()    // overusing `unwrap`. It's not
-                                        .next()      // always the best way to handle errors,
-                                        .unwrap()    // but for this case, it works well.
-                                        .unwrap();
-
-    Ok(BatteryInfo {
-        current_energy: battery.energy().value,
-        energy_rate: battery.energy_rate().value,
-        energy_full: battery.energy_full().value,
-        energy_full_design: battery.energy_full_design().value,
-        battery_state: battery.state().to_string()
-    })
-
+        Ok(BatteryInfo {
+            current_energy: battery.energy().value,
+            energy_rate: battery.energy_rate().value,
+            energy_full: battery.energy_full().value,
+            energy_full_design: battery.energy_full_design().value,
+            battery_state: battery.state().to_string(),
+        })
     }
 }

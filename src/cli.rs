@@ -3,7 +3,7 @@ use clap::Parser;
 #[derive(Debug)]
 pub enum QueryType {
     Benchmark,
-    AdHoc
+    AdHoc,
 }
 
 #[derive(Parser)]
@@ -33,42 +33,43 @@ pub struct BSArguments {
     pub filename: String,
     pub benchmark_running: bool,
     pub no_system: bool,
-    pub verbose:bool,
-    pub system_runs:u8,
+    pub verbose: bool,
+    pub system_runs: u8,
 }
 
 pub fn parse_arguments() -> BSArguments {
-
     let parser = Cli::parse();
 
-    let query_type = match parser.query_type
-                                    .as_deref()
-                                    .unwrap_or("adhoc")
-                                    .to_lowercase()
-                                    .as_str() {
-                                        "benchmark" => QueryType::Benchmark,
-                                        "adhoc" => QueryType::AdHoc,
-                                        _ => panic!("Unsupported operation selected.")
-                                    };
+    let query_type = match parser
+        .query_type
+        .as_deref()
+        .unwrap_or("adhoc")
+        .to_lowercase()
+        .as_str()
+    {
+        "benchmark" => QueryType::Benchmark,
+        "adhoc" => QueryType::AdHoc,
+        _ => panic!("Unsupported operation selected."),
+    };
 
     let filename = match parser.filename {
         Some(path) => path,
         _ => format!(
-                "./results/{}.csv", 
-                match query_type {
-                    QueryType::Benchmark => "benchmark",
-                    QueryType::AdHoc => "battery_script"
-                }
-            )
+            "./results/{}.csv",
+            match query_type {
+                QueryType::Benchmark => "benchmark",
+                QueryType::AdHoc => "battery_script",
+            }
+        ),
     };
 
-    let benchmark_running:bool = match parser.benchmark {
+    let benchmark_running: bool = match parser.benchmark {
         Some(x) => match x.as_str() {
             "true" => true,
             "false" => false,
             _ => panic!("Can't convert argument to bool."),
         },
-        _ => false
+        _ => false,
     };
 
     let no_system = parser.no_system.unwrap_or(false);
