@@ -1,7 +1,7 @@
 use sysinfo::System;
 
 fn avg(float_vec: Vec<f32>) -> f32 {
-    float_vec.iter().sum::<f32>() as f32/ float_vec.len() as f32
+    float_vec.iter().sum::<f32>()/ float_vec.len() as f32
 }
 
 #[derive(Debug)]
@@ -37,7 +37,7 @@ impl SystemInfo {
         Ok(SystemInfo {
             uptime: System::uptime(), 
             cpu_usage: avg(cpu_vector), 
-            memory_usage: avg(memory_vector) * 100 as f32
+            memory_usage: avg(memory_vector) * 100_f32
         })
 
     }
