@@ -76,11 +76,11 @@ pub fn parse_arguments() -> BSArguments {
     let system_runs = parser.system_runs.unwrap_or(30);
 
     BSArguments {
-        query_type: query_type,
-        filename: filename,
-        benchmark_running: benchmark_running,
-        no_system: no_system,
-        verbose: verbose,
-        system_runs: system_runs,
+        query_type,
+        filename,
+        benchmark_running,
+        no_system,
+        verbose,
+        system_runs,
     }
 }
