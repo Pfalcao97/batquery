@@ -12,26 +12,26 @@ fn main() {
     let query_moment = Local::now();
 
     if args.verbose {
-        print!("Querying battery info.\n");
+        println!("Querying battery info.");
     };
     
     let battery = battery_script::BatteryInfo::build().unwrap();
     
     if args.verbose {
-        println!("{:?}\n", battery);
+        println!("{:?}", battery);
     };
 
     result = 
         if args.no_system {
 
             if args.verbose {
-                print!("Querying system info.\n");
+                println!("Querying system info.");
             };
 
             let system = battery_script::SystemInfo::build(Some(args.system_runs)).unwrap();
 
             if args.verbose {
-                println!("{:?}\n", system);
+                println!("{:?}", system);
             };
 
             battery_script::elements_to_csv_line!(
@@ -58,7 +58,7 @@ fn main() {
         };
 
     if args.verbose {
-        print!("Saving data to file: {}.\n", args.filename);
+        println!("Saving data to file: {}.", args.filename);
     };
     
     result.push_str("\n");
