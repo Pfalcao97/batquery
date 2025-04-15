@@ -1,0 +1,1 @@
+batbench adhoc --verbose -f "C:\Users\Pedro Falcao\Documents\Rust\battery-script\windows\results\base\adhoc.csv" 

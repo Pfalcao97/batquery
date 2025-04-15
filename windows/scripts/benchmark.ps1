@@ -15,10 +15,8 @@ Do {
             $benchmark="false"
         }
 
-        cargo run -- $benchmark
+        batbench benchmark -f "C:\Users\Pedro Falcao\Documents\Rust\battery-script\windows\results\base\benchmark.csv" --benchmark $benchmark
         Start-Sleep $hearbeat   
     }
 
 } Until (!$ProgramRunning)
-
-# Powershell.exe -File .\benchmark.ps1
