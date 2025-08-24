@@ -40,6 +40,7 @@ fn main() {
             system.uptime,
             system.cpu_usage,
             system.memory_usage,
+            system.temperature,
             query_moment.format("%Y-%m-%d %H:%M:%S"),
             args.benchmark_running
         )
