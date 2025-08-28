@@ -26,7 +26,6 @@ pub fn append_row(file_path: &str, row:Full) -> Result<(), Box<dyn Error>> {
         true => WriterBuilder::new()
                                 .has_headers(false)
                                 .from_writer(OpenOptions::new()
-                                                            .write(true)
                                                             .create(true)
                                                             .append(true)
                                                             .open(fpath)?),
