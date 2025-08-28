@@ -86,6 +86,7 @@ dependencies = [
  "chrono",
  "clap",
  "csv",
+ "serde",
  "starship-battery",
  "sysinfo",
 ]
