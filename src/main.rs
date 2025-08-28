@@ -30,7 +30,7 @@ fn main() {
         system = Some(battery_script::SystemInfo::build(Some(args.system_runs)).unwrap());
 
         if args.verbose {
-            println!("{:?}", system);   
+            println!("{:?}", system);
         };
     };
 
@@ -39,7 +39,7 @@ fn main() {
     };
 
     let _ = battery_script::append_row(
-        args.filename.as_str(), 
+        args.filename.as_str(),
         battery_script::Full {
             current_energy: battery.current_energy,
             full_energy: battery.energy_full,
@@ -50,7 +50,7 @@ fn main() {
             memory_usage: system.as_ref().map(|sys| sys.memory_usage),
             cpu_temperature: system.as_ref().map(|sys| sys.temperature),
             query_moment: query_moment.format("%Y-%m-%d %H:%M:%S").to_string(),
-            is_benchmark_running: args.benchmark_running
-        }
+            is_benchmark_running: args.benchmark_running,
+        },
     );
 }

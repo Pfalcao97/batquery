@@ -65,14 +65,14 @@ pub fn parse_arguments() -> BSArguments {
 
     let benchmark_running: Option<bool> = match query_type {
         QueryType::AdHoc => None,
-        QueryType::Benchmark =>  match parser.benchmark {
+        QueryType::Benchmark => match parser.benchmark {
             Some(x) => match x.as_str() {
                 "true" => Some(true),
                 "false" => Some(false),
                 _ => panic!("Can't convert argument to bool."),
             },
             _ => Some(false),
-        }
+        },
     };
 
     let no_system = parser.no_system.unwrap_or(false);

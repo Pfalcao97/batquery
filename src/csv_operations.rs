@@ -1,6 +1,6 @@
+use csv::{Writer, WriterBuilder};
 use std::error::Error;
 use std::fs::OpenOptions;
-use csv::{Writer, WriterBuilder};
 use std::path::Path;
 
 #[derive(serde::Serialize)]
@@ -17,19 +17,14 @@ pub struct Full {
     pub is_benchmark_running: Option<bool>,
 }
 
-
-pub fn append_row(file_path: &str, row:Full) -> Result<(), Box<dyn Error>> {
-
+pub fn append_row(file_path: &str, row: Full) -> Result<(), Box<dyn Error>> {
     let fpath = Path::new(file_path);
 
     let mut wtr = match fpath.exists() {
         true => WriterBuilder::new()
-                                .has_headers(false)
-                                .from_writer(OpenOptions::new()
-                                                            .create(true)
-                                                            .append(true)
-                                                            .open(fpath)?),
-        false => Writer::from_path(fpath)?
+            .has_headers(false)
+            .from_writer(OpenOptions::new().create(true).append(true).open(fpath)?),
+        false => Writer::from_path(fpath)?,
     };
 
     wtr.serialize(row)?;
