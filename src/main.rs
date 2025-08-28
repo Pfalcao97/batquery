@@ -1,8 +1,7 @@
+use battery_script::SystemInfo;
 use chrono::Local;
 
 fn main() {
-    let mut result: String;
-
     let args = battery_script::parse_arguments();
 
     if args.verbose {
@@ -21,44 +20,49 @@ fn main() {
         println!("{:?}", battery);
     };
 
-    result = if args.no_system {
+    let mut system: Option<SystemInfo> = None;
+
+    if args.no_system {
         if args.verbose {
             println!("Querying system info.");
         };
 
-        let system = battery_script::SystemInfo::build(Some(args.system_runs)).unwrap();
+        system = Some(battery_script::SystemInfo::build(Some(args.system_runs)).unwrap());
 
         if args.verbose {
-            println!("{:?}", system);
+            println!("{:?}", system);   
         };
-
-        battery_script::elements_to_csv_line!(
-            battery.current_energy,
-            battery.energy_full,
-            battery.energy_full_design,
-            battery.energy_rate,
-            system.uptime,
-            system.cpu_usage,
-            system.memory_usage,
-            system.temperature,
-            query_moment.format("%Y-%m-%d %H:%M:%S"),
-            args.benchmark_running
-        )
-    } else {
-        battery_script::elements_to_csv_line!(
-            battery.current_energy,
-            battery.energy_full,
-            battery.energy_full_design,
-            battery.energy_rate,
-            query_moment.format("%Y-%m-%d %H:%M:%S"),
-            args.benchmark_running
-        )
     };
 
     if args.verbose {
         println!("Saving data to file: {}.", args.filename);
     };
 
-    result.push_str("\n");
-    battery_script::append_to_csv(args.filename.as_str(), result);
+    let _ = battery_script::append_row(
+        args.filename.as_str(), 
+        battery_script::Full {
+            current_energy: battery.current_energy,
+            full_energy: battery.energy_full,
+            design_full_energy: battery.energy_full_design,
+            energy_loss_rate: battery.energy_rate,
+            system_uptime: match &system {
+                Some(sys) => Some(sys.uptime),
+                None => None
+            },
+            cpu_usage: match &system {
+                Some(sys) => Some(sys.cpu_usage),
+                None => None
+            },
+            memory_usage: match &system {
+                Some(sys) => Some(sys.memory_usage),
+                None => None
+            },
+            cpu_temperature: match &system {
+                Some(sys) => Some(sys.temperature),
+                None => None
+            },
+            query_moment: query_moment.format("%Y-%m-%d %H:%M:%S").to_string(),
+            is_benchmark_running: args.benchmark_running
+        }
+    );
 }
