@@ -14,7 +14,7 @@ pub struct Full {
     pub memory_usage: Option<f32>,
     pub cpu_temperature: Option<f32>,
     pub query_moment: String,
-    pub is_benchmark_running: bool,
+    pub is_benchmark_running: Option<bool>,
 }
 
 

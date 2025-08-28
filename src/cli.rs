@@ -31,7 +31,7 @@ struct Cli {
 pub struct BSArguments {
     pub query_type: QueryType,
     pub filename: String,
-    pub benchmark_running: bool,
+    pub benchmark_running: Option<bool>,
     pub no_system: bool,
     pub verbose: bool,
     pub system_runs: u8,
@@ -63,13 +63,16 @@ pub fn parse_arguments() -> BSArguments {
         ),
     };
 
-    let benchmark_running: bool = match parser.benchmark {
-        Some(x) => match x.as_str() {
-            "true" => true,
-            "false" => false,
-            _ => panic!("Can't convert argument to bool."),
-        },
-        _ => false,
+    let benchmark_running: Option<bool> = match query_type {
+        QueryType::AdHoc => None,
+        QueryType::Benchmark =>  match parser.benchmark {
+            Some(x) => match x.as_str() {
+                "true" => Some(true),
+                "false" => Some(false),
+                _ => panic!("Can't convert argument to bool."),
+            },
+            _ => Some(false),
+        }
     };
 
     let no_system = parser.no_system.unwrap_or(false);
