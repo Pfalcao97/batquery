@@ -45,22 +45,10 @@ fn main() {
             full_energy: battery.energy_full,
             design_full_energy: battery.energy_full_design,
             energy_loss_rate: battery.energy_rate,
-            system_uptime: match &system {
-                Some(sys) => Some(sys.uptime),
-                None => None
-            },
-            cpu_usage: match &system {
-                Some(sys) => Some(sys.cpu_usage),
-                None => None
-            },
-            memory_usage: match &system {
-                Some(sys) => Some(sys.memory_usage),
-                None => None
-            },
-            cpu_temperature: match &system {
-                Some(sys) => Some(sys.temperature),
-                None => None
-            },
+            system_uptime: system.as_ref().map(|sys| sys.uptime),
+            cpu_usage: system.as_ref().map(|sys| sys.cpu_usage),
+            memory_usage: system.as_ref().map(|sys| sys.memory_usage),
+            cpu_temperature: system.as_ref().map(|sys| sys.temperature),
             query_moment: query_moment.format("%Y-%m-%d %H:%M:%S").to_string(),
             is_benchmark_running: args.benchmark_running
         }
