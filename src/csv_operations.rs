@@ -1,30 +1,34 @@
+use csv::{Writer, WriterBuilder};
+use std::error::Error;
 use std::fs::OpenOptions;
-use std::io::Write;
+use std::path::Path;
 
-pub fn append_to_csv(path: &str, line: String) {
-    OpenOptions::new()
-        .append(true)
-        .create(true)
-        .open(path)
-        .expect("Failed to open file")
-        .write_all(line.as_bytes())
-        .expect("Failed to append to file");
+#[derive(serde::Serialize)]
+pub struct Full {
+    pub current_energy: f32,
+    pub full_energy: f32,
+    pub design_full_energy: f32,
+    pub energy_loss_rate: f32,
+    pub system_uptime: Option<u64>,
+    pub cpu_usage: Option<f32>,
+    pub memory_usage: Option<f32>,
+    pub cpu_temperature: Option<f32>,
+    pub query_moment: String,
+    pub is_benchmark_running: Option<bool>,
 }
 
-#[macro_export]
-macro_rules! elements_to_csv_line {
+pub fn append_row(file_path: &str, row: Full) -> Result<(), Box<dyn Error>> {
+    let fpath = Path::new(file_path);
 
-    ($first:expr) => {
-        format!("{}", $first)
+    let mut wtr = match fpath.exists() {
+        true => WriterBuilder::new()
+            .has_headers(false)
+            .from_writer(OpenOptions::new().create(true).append(true).open(fpath)?),
+        false => Writer::from_path(fpath)?,
     };
 
-    ($first:expr, $($rest:expr),+) => {
-        format!("{}{}", $first, {
-            let mut result = String::new();
-            $(
-                result.push_str(&format!(",{}", $rest));
-            )*
-            result
-        })
-    };
+    wtr.serialize(row)?;
+
+    wtr.flush()?;
+    Ok(())
 }

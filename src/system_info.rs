@@ -35,7 +35,7 @@ fn get_temp() -> f32 {
     temp
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub struct SystemInfo {
     pub uptime: u64,
     pub cpu_usage: f32,
