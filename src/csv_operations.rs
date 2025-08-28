@@ -9,6 +9,7 @@ pub struct Full {
     pub full_energy: f32,
     pub design_full_energy: f32,
     pub energy_loss_rate: f32,
+    pub battery_state: String,
     pub system_uptime: Option<u64>,
     pub cpu_usage: Option<f32>,
     pub memory_usage: Option<f32>,

@@ -45,6 +45,7 @@ fn main() {
             full_energy: battery.energy_full,
             design_full_energy: battery.energy_full_design,
             energy_loss_rate: battery.energy_rate,
+            battery_state: battery.battery_state,
             system_uptime: system.as_ref().map(|sys| sys.uptime),
             cpu_usage: system.as_ref().map(|sys| sys.cpu_usage),
             memory_usage: system.as_ref().map(|sys| sys.memory_usage),
