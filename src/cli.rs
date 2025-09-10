@@ -27,7 +27,7 @@ struct Cli {
     system_runs: Option<u8>,
 
     #[arg(short, long)]
-    label: Option<String>
+    label: Option<String>,
 }
 
 #[derive(Debug)]
@@ -38,7 +38,7 @@ pub struct BSArguments {
     pub no_system: bool,
     pub verbose: bool,
     pub system_runs: u8,
-    pub label: Option<String>
+    pub label: Option<String>,
 }
 
 pub fn parse_arguments() -> BSArguments {
@@ -91,6 +91,6 @@ pub fn parse_arguments() -> BSArguments {
         no_system,
         verbose,
         system_runs,
-        label
+        label,
     }
 }
