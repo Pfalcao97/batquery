@@ -16,6 +16,7 @@ pub struct Full {
     pub cpu_temperature: Option<f32>,
     pub query_moment: String,
     pub is_benchmark_running: Option<bool>,
+    pub label: Option<String>,
 }
 
 pub fn append_row(file_path: &str, row: Full) -> Result<(), Box<dyn Error>> {

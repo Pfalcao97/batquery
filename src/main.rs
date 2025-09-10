@@ -52,6 +52,7 @@ fn main() {
             cpu_temperature: system.as_ref().map(|sys| sys.temperature),
             query_moment: query_moment.format("%Y-%m-%d %H:%M:%S").to_string(),
             is_benchmark_running: args.benchmark_running,
+            label: args.label,
         },
     );
 }
