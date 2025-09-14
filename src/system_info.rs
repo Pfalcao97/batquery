@@ -57,7 +57,7 @@ pub struct SystemInfo {
 }
 
 impl SystemInfo {
-    pub fn build(maximum_loops: Option<u8>) -> Result<SystemInfo, &'static str> {
+    pub fn build(maximum_loops: Option<u8>, verbose: bool) -> Result<SystemInfo, &'static str> {
         let maximum_loops = maximum_loops.unwrap_or(30);
 
         let mut cpu_vector: Vec<f32> = Vec::new();
@@ -84,7 +84,10 @@ impl SystemInfo {
 
                 // Once we have a big enough sample, we can may start checking for stability
                 if stddev(last_five.clone()) < 0.1 {
-                    println!("Early break after {:?} loops!", counter);
+                    if verbose {
+                        println!("Early break after {:?} loops!", counter);
+                    }
+                    
                     break
                 }
             }

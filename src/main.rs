@@ -27,7 +27,7 @@ fn main() {
             println!("Querying system info.");
         };
 
-        system = Some(battery_script::SystemInfo::build(Some(args.system_runs)).unwrap());
+        system = Some(battery_script::SystemInfo::build(Some(args.system_runs), args.verbose).unwrap());
 
         if args.verbose {
             println!("{:?}", system);
