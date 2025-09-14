@@ -57,7 +57,10 @@ impl SystemInfo {
             system.refresh_cpu_all(); // it's important to constantly refresh 
             system.refresh_memory(); // the System object.
 
-            cpu_vector.push(system.global_cpu_usage());
+            if counter != 0 {
+                // CPU usage always starts out at 100%, so the first value can be discarded
+                cpu_vector.push(system.global_cpu_usage());
+            };
             memory_vector.push(system.used_memory() as f32 / system.total_memory() as f32);
 
             std::thread::sleep(sysinfo::MINIMUM_CPU_UPDATE_INTERVAL);
