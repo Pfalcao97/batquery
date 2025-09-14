@@ -5,6 +5,19 @@ fn avg(float_vec: Vec<f32>) -> f32 {
     float_vec.iter().sum::<f32>() / float_vec.len() as f32
 }
 
+fn stddev(last_five_avgs: Vec<f32>) -> f32 {
+    
+    let mean = avg(last_five_avgs.clone());
+    let mut sum: f32 = 0.0;
+
+    for val in last_five_avgs.iter() {
+        sum += (val - mean).powi(2);
+    };
+
+    (sum / (last_five_avgs.len() - 1) as f32).powf(0.5)
+}
+
+
 fn get_temp() -> f32 {
     let mut temp: f32 = 0.0;
     let output = Command::new("powershell")
@@ -53,6 +66,7 @@ impl SystemInfo {
         let mut system = System::new();
 
         let mut counter: u8 = 0;
+        let mut last_five: Vec<f32> = Vec::new();
         while counter <= maximum_loops {
             system.refresh_cpu_all(); // it's important to constantly refresh 
             system.refresh_memory(); // the System object.
@@ -62,6 +76,18 @@ impl SystemInfo {
                 cpu_vector.push(system.global_cpu_usage());
             };
             memory_vector.push(system.used_memory() as f32 / system.total_memory() as f32);
+
+            last_five.push(avg(cpu_vector.clone()));
+
+            if last_five.len() == 5 {
+                last_five.remove(0);
+
+                // Once we have a big enough sample, we can may start checking for stability
+                if stddev(last_five.clone()) < 0.1 {
+                    println!("Early break after {:?} loops!", counter);
+                    break
+                }
+            }
 
             std::thread::sleep(sysinfo::MINIMUM_CPU_UPDATE_INTERVAL);
             counter += 1;
