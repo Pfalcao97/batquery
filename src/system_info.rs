@@ -1,36 +1,33 @@
-use std::process::Command;
-use sysinfo::{System, Component, Components};
 use std::env::consts::OS;
+use std::process::Command;
+use sysinfo::{Component, Components, System};
 
 fn avg(float_vec: Vec<f32>) -> f32 {
     float_vec.iter().sum::<f32>() / float_vec.len() as f32
 }
 
 fn stddev(last_five_avgs: Vec<f32>) -> f32 {
-    
     let mean = avg(last_five_avgs.clone());
     let mut sum: f32 = 0.0;
 
     for val in last_five_avgs.iter() {
         sum += (val - mean).powi(2);
-    };
+    }
 
     (sum / (last_five_avgs.len() - 1) as f32).powf(0.5)
 }
 
-
 fn get_temp() -> f32 {
-
     match OS {
         "linux" => {
             let components = Components::new_with_refreshed_list();
-            let cpu_component: Vec<&Component> = components.iter()
-                                                            .filter(|x| x.label().to_lowercase().contains("tctl"))
-                                                            .collect();
+            let cpu_component: Vec<&Component> = components
+                .iter()
+                .filter(|x| x.label().to_lowercase().contains("tctl"))
+                .collect();
             cpu_component[0].temperature().unwrap()
         }
         "windows" => {
-
             let output = Command::new("powershell")
                 .args(["Get-WmiObject MSAcpi_ThermalZoneTemperature -Namespace 'root/wmi'"])
                 .output()
@@ -51,15 +48,14 @@ fn get_temp() -> f32 {
                 }
                 (_temp_aux as f32 / 10.0) - 273.15
             } else {
-                println!("Couldn't run the temperature command - try running this script with Adminstrator Access");
+                println!(
+                    "Couldn't run the temperature command - try running this script with Adminstrator Access"
+                );
                 0.0
             }
         }
-        _ => {
-            0.0
-        }
+        _ => 0.0,
     }
-
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -101,8 +97,8 @@ impl SystemInfo {
                     if verbose {
                         println!("Early break after {:?} loops!", counter);
                     }
-                    
-                    break
+
+                    break;
                 }
             }
 
