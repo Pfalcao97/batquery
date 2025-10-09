@@ -1,51 +1,61 @@
+use std::env::consts::OS;
 use std::process::Command;
-use sysinfo::System;
+use sysinfo::{Component, Components, System};
 
 fn avg(float_vec: Vec<f32>) -> f32 {
     float_vec.iter().sum::<f32>() / float_vec.len() as f32
 }
 
 fn stddev(last_five_avgs: Vec<f32>) -> f32 {
-    
     let mean = avg(last_five_avgs.clone());
     let mut sum: f32 = 0.0;
 
     for val in last_five_avgs.iter() {
         sum += (val - mean).powi(2);
-    };
+    }
 
     (sum / (last_five_avgs.len() - 1) as f32).powf(0.5)
 }
 
-
 fn get_temp() -> f32 {
-    let mut temp: f32 = 0.0;
-    let output = Command::new("powershell")
-        .args(["Get-WmiObject MSAcpi_ThermalZoneTemperature -Namespace 'root/wmi'"])
-        .output()
-        .expect("Failed to execute command");
+    match OS {
+        "linux" => {
+            let components = Components::new_with_refreshed_list();
+            let cpu_component: Vec<&Component> = components
+                .iter()
+                .filter(|x| x.label().to_lowercase().contains("tctl"))
+                .collect();
+            cpu_component[0].temperature().unwrap()
+        }
+        "windows" => {
+            let output = Command::new("powershell")
+                .args(["Get-WmiObject MSAcpi_ThermalZoneTemperature -Namespace 'root/wmi'"])
+                .output()
+                .expect("Failed to execute command");
 
-    if output.status.success() {
-        for line in String::from_utf8_lossy(&output.stdout).lines() {
-            if line.contains("CurrentTemperature") {
-                let _temp_aux: i16 = line
-                    .split(":")
-                    .last()
-                    .expect("Couldn't find temperature.")
-                    .trim()
-                    .parse()
-                    .unwrap();
-
-                temp = (_temp_aux as f32 / 10.0) - 273.15;
+            if output.status.success() {
+                let mut _temp_aux: i16 = 0;
+                for line in String::from_utf8_lossy(&output.stdout).lines() {
+                    if line.contains("CurrentTemperature") {
+                        _temp_aux = line
+                            .split(":")
+                            .last()
+                            .expect("Couldn't find temperature.")
+                            .trim()
+                            .parse()
+                            .unwrap();
+                    }
+                }
+                (_temp_aux as f32 / 10.0) - 273.15
+            } else {
+                println!(
+                    "Couldn't run the temperature command - try running this script with Adminstrator Access"
+                );
+                0.0
             }
         }
-    } else {
-        println!(
-            "Couldn't run the temperature command - try running this script with Adminstrator Access"
-        );
+        _ => 0.0,
     }
-
-    temp
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -87,8 +97,8 @@ impl SystemInfo {
                     if verbose {
                         println!("Early break after {:?} loops!", counter);
                     }
-                    
-                    break
+
+                    break;
                 }
             }
 
